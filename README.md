@@ -9,9 +9,9 @@ The idea is to be able to determine schools, districts, and US regions that can 
 ### _Week 2_
 
 #### Saturday
-- [x] Obtain Data from Facebook
-- [x] Clean up the code 
-- [x] Add code for centrality metrics
-- [x] Add code for the clustering metrics
+- [ ] Obtain Data from Facebook
+- [ ] Clean up the code 
+- [ ] Add code for centrality metrics
+- [ ] Add code for the clustering metrics
 
 
