@@ -13,5 +13,6 @@ The idea is to be able to determine schools, districts, and US regions that can 
 - [x] Clean up the code 
 - [ ] Add code for centrality metrics
 - [ ] Add code for the clustering metrics
+- [ ] Sample the graph
 
 
