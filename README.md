@@ -10,7 +10,7 @@ The idea is to be able to determine schools, districts, and US regions that can 
 
 #### Saturday
 - [] Obtain Data from Facebook
-- [X ] Clean up the code 
+- [x] Clean up the code 
 - [ ] Add code for centrality metrics
 - [ ] Add code for the clustering metrics
 
