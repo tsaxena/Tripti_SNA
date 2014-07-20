@@ -2,7 +2,8 @@ Zipfian Capstone Project
 ===
 
 #### _current project direction_
-The idea is to be able to determine schools, districts, and US regions that can most benefit from DonorsChoose by creating a rating that describes schools as being most similar to the most active DonorsChoose schools.
+The idea is to identify influencers in a social network for target advertising.
+
 
 ## Project Checklist
 
@@ -13,6 +14,6 @@ The idea is to be able to determine schools, districts, and US regions that can 
 - [x] Clean up the code 
 - [ ] Add code for centrality metrics
 - [ ] Add code for the clustering metrics
-- [ ] Sample the graph
+- [x] Sample the graph
 
 
