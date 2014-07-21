@@ -26,3 +26,4 @@ The idea is to identify influencers in a social network for target advertising.
 
 - [ ] Identify an intelligent way to get a smaller set
 - [ ] Run analysis on a smaller set 
+- [ ] Plot the cliques in the smaller set, put then on instance for Rohit to check
