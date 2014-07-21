@@ -16,11 +16,13 @@ The idea is to identify influencers in a social network for target advertising.
 
 
 #### Sunday
-- [ ] Add code for centrality metrics
-- [ ] Add code for the clustering metrics
-- [ ] Community Detection. Lovain , get the largest community 
+- [x] Add code for centrality metrics
+- [x] Add code for the clustering metrics
+- [x] Community Detection. Lovain , get the largest community 
 - [ ] Block Diagram proximity
 
 
-###
+#### Monday
 
+- [ ] Identify an intelligent way to get a smaller set
+- [ ] Run analysis on a smaller set 
