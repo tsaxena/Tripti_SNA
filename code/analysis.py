@@ -13,6 +13,44 @@ path = '../data/'
 inputfile = 'orig_sampled.edgelist'
 smallfile = 'bizinfo_subgraph.edgelist' # reduction of the graph based on business info
 
+# Source: https://www.udacity.com/wiki/creating-network-graphs-with-python
+def draw_graph(G, labels=None, graph_layout='shell',
+               node_size=200, node_color='blue', node_alpha=0.3,
+               node_text_size=12,
+               edge_color='blue', edge_alpha=0.3, edge_thickness=1,
+               edge_text_pos=0.3,
+               text_font='sans-serif'):
+
+    # # these are different layouts for the network you may try
+    # # shell seems to work best
+    # if graph_layout == 'spring':
+    #     graph_pos = nx.spring_layout(G)
+    # elif graph_layout == 'spectral':
+    #     graph_pos = nx.spectral_layout(G)
+    # elif graph_layout == 'random':
+    #     graph_pos = nx.random_layout(G)
+    # else:
+    graph_pos = nx.shell_layout(G)
+
+    # draw graph
+    #nx.draw_networkx_nodes(G, graph_pos, node_size=node_size,
+    #                       alpha=node_alpha, node_color=node_color)
+
+    #nx.draw_networkx_edges(G, graph_pos, width=edge_thickness,
+    #                       alpha=edge_alpha, edge_color=edge_color)
+
+    #nx.draw_networkx_labels(G, graph_pos, font_size=node_text_size,
+                            #font_family=text_font)
+    pos=nx.spring_layout(G)
+    #colors=range(20)
+    nx.draw(G,pos,node_color='#A0CBE2',width=4,edge_cmap=plt.cm.Blues,with_labels=False)
+    plt.savefig("edge_colormap.png") # save as png
+# plt.show()
+#     nx.draw(G)  # networkx draw()
+#     plt.draw()
+#     plt.show()
+
+
   
 def read_in_graph(filename, info=True):
     # a directed graph by default.  Change this if you want undirected.
@@ -96,6 +134,7 @@ def find_cliques(graph):
     print "Number of cliques:", len(cl)
     cl_sizes = [len(c) for c in cl]
     print "Size of cliques:", cl_sizes
+    print "Writing first clique to file", #graph.subgraph(cl[0])
     return cl
   
 def find_partition(graph):
@@ -105,11 +144,19 @@ def find_partition(graph):
     g = graph
     partition = community.best_partition( g )
     print "Partitions found: ", len(set(partition.values()))
-    # to show members of each partition:
-    # for i in set(partition.values()):
-    #     members = [nodes for nodes in partition.keys() if partition[nodes] == i]
-    #     for member in members:
-    #         print member, i
+    #to show members of each partition:
+    for i in set(partition.values()):
+        members = [nodes for nodes in partition.keys() if partition[nodes] == i]
+        print i, len(members)
+
+        if i==0:
+             # write out the subgraph
+             community_graph = graph.subgraph(members)
+             draw_graph(community_graph)
+             #nx.write_edgelist(community_graph, "community.edgelist", data=False)
+             #for member in members:
+        #         print member, i
+           
     #print "Partition for node johncoogan: ", partition[node_id]
     nx.set_node_attributes(g,'partition',partition)
     return g, partition
@@ -176,17 +223,16 @@ def run_analysis():
     
     # # find cliques 
     # # biggest clique found consists of 16 elements 
-    #find_cliques(undir_g)
+    find_cliques(undir_g)
     
     # # Examine partitioning algo and potentially tweak.
-    undir_g, part = find_partition(undir_g)  
+    #undir_g, part = find_partition(undir_g)  
 
     # # draw_partition(undir_g, part)   # draws a matplotlib graph in grays
   
     # # show that the partition info is added to the nodes:
     #report_node_data(undir_g, node=node_id)
   
-    # # reduce what you send to Javascript --
     # # trim what's saved to js file by taking only N nodes, with top values of a certain attribute...
     # eigen_sorted = sorted(eigen.items(), key=itemgetter(1), reverse=True)
     # for key, val in eigen_sorted[0:5]:
@@ -197,12 +243,9 @@ def run_analysis():
     # small_graph = trim_nodes_by_attribute_for_remaining_number(undir_g, eigen_sorted, small_graph_size)
   
     # print nx.info(small_graph)
+
+    #struggling to figure out 
   
-    # #save as json for use in javascript - small graph, and full graph if you want
-    # save_to_jsonfile(path+smalloutputjsonfile, small_graph)
-    # print "Saved small graph to new file: ", path+smalloutputjsonfile
-    # save_to_jsonfile(path+bigoutputjsonfile, undir_g)
-    # print "Saved big graph to new file: ", path+bigoutputjsonfile
-  
+    
 if __name__ == '__main__':
     run_analysis()
