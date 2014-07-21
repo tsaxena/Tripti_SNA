@@ -28,6 +28,3 @@ The idea is to identify influencers in a social network for target advertising.
 - [ ] Run analysis on a smaller set 
 - [ ] Check out the similarity matrix based recommender details
 - 
-
-
-
