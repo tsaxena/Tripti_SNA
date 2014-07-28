@@ -168,18 +168,7 @@ def run_analysis(dg):
     
   
     
-#def find_cliques(graph):
-#     # returns cliques as sorted list
-#     g = graph
-#     cl = nx.find_cliques(g)
-#     cl = sorted(list( cl ), key=len, reverse=True)
-#     print "Number of cliques:", len(cl)
-#     cl_sizes = [len(c) for c in cl]
-#     print "Size of cliques:", cl_sizes
-#     print "Writing first clique to file..."
-#     clique_graph = graph.subgraph(cl[0])
-#     nx.write_edgelist(clique_graph, "clique.edgelist", data=False)
-#     return cl
+
   
 # def find_partition(graph):
 #     # code and lib from http://perso.crans.org/aynaud/communities/

@@ -82,10 +82,10 @@ def draw_partition(graph, partition):
     plt.show()
 
 
-def write_partition(partition, filename):
-    print "Writing partition to file..."
-    clique_graph = graph.subgraph(cl[0])
-    nx.write_edgelist(clique_graph, "clique.edgelist", data=False)
+# def write_partition(partition, filename):
+#     print "Writing partition to file..."
+#     clique_graph = graph.subgraph(cl[0])
+#     nx.write_edgelist(clique_graph, "clique.edgelist", data=False)
 
 
 def get_block_model(graph, partitions):
