@@ -14,6 +14,7 @@ import time
 #
 base='../data/generated/'
 infile='total_biz_info_with_catlabel.csv'
+newinfile ='local_biz_only.csv'
 ingraphfile = 'subgraphedgelist.ntx'
 origgraphfile = 'edgelist.ntx'
 cliquebase = base + '/cliques/'
@@ -79,15 +80,13 @@ def get_density(subgraph):
 
 """ customized score
 """
-def get_most_influential(subgraph, personalization, num=5):
+def get_most_influential(df, subgraph, num=5):
 
     # personalization vector comes from the 
     # social presence
-    pr_dict = nx.pagerank(subgraph)
-    #most_influential = 
-    #pr = sorted([(val, user) for user, val in pr.iteritems()], reverse=True)
+    local_pr_dict = nx.pagerank(subgraph)
+    #block level page_rank
 
-    print pr #return [x[1] for x in pr[num]]
 
 
 """ returns a clique subgrapg
@@ -141,6 +140,8 @@ def get_community_scc(commid, commdf, graph):
      component
 """
 def get_community_biconnections(commid, df, graph):
+
+    print "Find biconnections in the community :", commid
     
     print nx.info(graph)
 
@@ -195,15 +196,15 @@ def get_community_analytics(df, graph):
 
     community_data[commid]['comm_size'] = subdf.shape[0]
 
-    community_data[commid]['categories'] = get_most_significant_categories(subdf)
+    #community_data[commid]['categories'] = get_most_significant_categories(subdf)
 
-    community_data[commid]['most_connected'] = get_most_influential(subgraph)
+    #community_data[commid]['most_connected'] = get_most_influential(subdf, subgraph)
 
-    community_data[commid]['density'] = get_density(subgraph)
+    #community_data[commid]['density'] = get_density(subgraph)
 
-    community_data[commid]['clique'] = get_community_cliques(commid, subdf, subgraph)
+    #community_data[commid]['clique'] = get_community_cliques(commid, subdf, subgraph)
 
-    community_data[commid]['biconn'] = get_community_biconn(commid, subdf, subgraph)
+    community_data[commid]['biconn'] = get_community_biconnections(commid, subdf, subgraph)
 
 
     #get_community_biconnections(commid, subdf, subgraph)
@@ -236,7 +237,8 @@ def sort_dictionary(dictionary):
 
 def main():
     # read in the total biz file
-    df = pd.read_csv(base+infile)
+    #df = pd.read_csv(base+infile)
+    df = pd.read_csv(base+newinfile)
     df = df.set_index('pageid')
     print df.columns
 
@@ -248,7 +250,8 @@ def main():
     get_community_analytics(df, globalgraph)
 
     ## modularity and conductance of the map
-    get_modularity()
+    #get_modularity()
+    #get_conductance()
 
 
 
