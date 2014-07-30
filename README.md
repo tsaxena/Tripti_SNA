@@ -3,34 +3,29 @@ Businesses You May Know
 Recommender engine for existing users of a social networking startup to invite other users to join the platform.
 
 
-Townsquared is building private online communities for local businesses. The purpose of this project is to help increase the user base of TownSquared using a recommendation engine that prompts existing users to invite other businesses they might know to join the platform. 
+TownSquared is building private online communities for local businesses. The purpose of this project is to help increase the user base of TownSquared using a recommendation engine that prompts current users to invite other businesses they might know to join the platform.  I used the Facebook business to business likes to infer relationship between them and that is then used to build the recommendation engine. 
 
-
-Data sources used include information provided by TownSquared on facebook interactions of businesses and business information. 
-
-    DonorsChoose Hacking Education
-    National Center for Education Statistics
-    2010 US Census school districtsl
-
+Data sources used included 
+         Facebook profiles of businesses. 
+         Business to Business likes on Facebook. 
+    
 Process
 
     Data pipeline
-        get_donorschoose.py
-        get_nces.py
-        get_census.py
-        get_latlon.py
-    EDA on California schools alone
-        california.py
-    Train classifiers to predict DonorsChoose Activity
-        feature_importance.py
-    Explore feature-importances with the aggregated data
-    Develop a fast cosine-similarity calculation using matrix multiplication
-        similarity.py
-    Recommend districts based on their cosine-similarity to active schools
-        district.py
-    Develop d3.js interactive visualization to explore result
-        hosted on abshinn.github.io
-        the code lives here
+        clean_data.py
+    SNA on B2B like graph, reduce the size of the graph by sampling.
+        graph_sample.py
+        graph_stats.py
+        sna.py
 
-My first approach was to train classifiers to predict active DonorsChoose schools. Due to the complicated nature of the learning objective, it was difficult to predict activity with meaningful accuracy. As an alternative, I used the classifiers to whittle down the large feature set for a cosine-similarity calculation. The objective for the cosine-similarity calculation is to leverage the district-level aggregated data to find districts that are economically similar to the most active DonorsChoose schools.
-End Product
+    Find latent communities in the graph based on the structural properties of the graph.
+        graph_partition.py
+    
+    Analyze each of the communities individually.
+        community_analysis.py
+
+    Recommend users based on a combination of distance similarity, category similarity, and graph distances.
+        recommend.py
+    
+
+My first step was to perform social network analysis on the whole graph. I analyzed a number of ways to break the problem down by sampling and partitioning and found that structure based community detection gave the best results. The communities partition the graph such that the interactions within the communities can be analyzed at depth. I then build similarity matrices at the community level to perform recommendations. 
