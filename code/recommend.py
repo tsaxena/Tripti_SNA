@@ -105,6 +105,16 @@ def calculate_cosine_similarity(data):
     #print "shape of the cosine matrix:", cos.shape
     return cos
 
+def get_tsusers(graph):
+    # size of the set
+    nl =  graph.nodes()
+    size = int(len(nl) * 0.01) 
+
+    #randomly select 1% of the nodes to be on TownSquare 
+    tsu = np.random.choice(nl, size)
+    print tsu
+    return tsu
+
 
 class BizYouKnow(object):
     """Compute and store cosine similarity matrix, allow methods to operate on the stored matrix.
@@ -115,7 +125,7 @@ class BizYouKnow(object):
     """
 
 
-    def __init__(self, bizinfo, graph):
+    def __init__(self, bizinfo, graph, tsusers):
 
         # datafile consisting of all business information
         # graph
@@ -130,6 +140,9 @@ class BizYouKnow(object):
         # unified dictionary containing information
         # about all comunities
         self.community_data = None 
+
+        ## list of users on ts
+        self.tsusers = tsusers
 
 
     def precompute(self):
@@ -353,7 +366,7 @@ class BizYouKnow(object):
         #print "category similarity", sort_dictionary(sim_dict)
 
         # sort the dictionary
-        for (b, cs) in reversed(sort_dictionary(sim_dict)):
+        for (b, cs) in sort_dictionary(sim_dict):
             reason = "neighbor with category match (less is better):" + str(np.round(cs,4))
             reccos.append((b, reason))
 
@@ -362,25 +375,37 @@ class BizYouKnow(object):
             return reccos[0:k]
         return reccos
 
-    def get_triadic_recommendations(self, commid, userid, reccos):
+    def get_triadic_recommendations(self, commid, userid, k):
         """ Given a graph give neighbor of neighbor recommendations 
         """
         # get the ego network of the user 2 step
         G = self.community_data[commid]['graph']
         EG = nx.ego_graph(G, userid, 2)
         
-        # bicomponents of neighbours that is not you
-        neighbors_of_neighbors = []
+        
+        nbrs = []
         for n in EG.neighbors(userid):
-            neighbors_of_neighbors.extend(EG.neighbors(n))
+            if n != userid:
+                for non in G.neighbors(n):
+                    if non != userid and non in self.tsusers:
+                        nbrs.append(n)
 
-        #print neighbors_of_neighbors
-        nons = set(neighbors_of_neighbors)-set([userid])
 
-        # if the non likes someone on townsquare
+        #print "neighbors of neighbors on", nbrs
+        # get neighbors and neighbors of neighbors
+        # that is not you
+        # neighbors = set(EG.neighbors) - set([userid])
+        #nons = set(neighbors_of_neighbors)-set([userid])
 
-        # if I am in a biconn with 
-        #return 
+        # for 
+        reccos = []
+        for n in nbrs:
+            reason = "neighbor who likes a townsquare member"
+            reccos.append((n, reason))
+        
+        if len(reccos) >= k:
+            return reccos[0:k]
+        return reccos
 
     
     def get_attribute_reccomendations(self, commid, userid, k):
@@ -419,19 +444,22 @@ class BizYouKnow(object):
             return reccos
 
         # # if less than k then move on to neighbour of neighbour recommendations
-        #reccos = self.get_triadic_recommendations(commid, userid, reccos)
-        #if len(reccos) >= k:
-        #    return reccos
-
+        nr = len(reccos)
+        rest = k - nr
+        if rest > 0:
+            reccos.extend(self.get_triadic_recommendations(commid, userid, rest))
+      
         # # else rest of the reccomendations are distance based recommendations
-        rn = len(reccos)
-        rest = k - rn 
-        reccos.extend(self.get_attribute_reccomendations(commid, userid, rest))
+        nr = len(reccos)
+        rest = k - nr 
+        if rest > 0:
+            reccos.extend(self.get_attribute_reccomendations(commid, userid, rest))
+        
         return reccos
 
  
     
-    def recommend(self, biz_id, n=5):
+    def recommend(self, biz_id, n=10):
         
         #print "Recommend top 5 businesses for :", biz_id
         # identify the comm id of the biz
@@ -494,7 +522,8 @@ class BizYouKnow(object):
 def main():
     print "Getting the data for the recommender"
     df, graph = data_prep(base+infile, base+ingraphfile)
-    byk  = BizYouKnow(df, graph)
+    tsusers = get_tsusers(graph)
+    byk  = BizYouKnow(df, graph, tsusers)
     byk.precompute()
     byk.recommend_for_all(7)
     #byk.recommend(74465121112)
